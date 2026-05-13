@@ -40,9 +40,11 @@ def main():
         print(f"Symbol      : {order['symbol']}")
         print(f"Side        : {order['side']}")
         print(f"Order Type  : {order['type']}")
-        print(f"Quantity    : {order['quantity']}")
-        print(f"Price       : {order['price']}")
-        print(f"Status      : {order['status']}")
+        print(f"Quantity    : {order.get('origQty')}")
+        print(f"Executed Qty: {order.get('executedQty')}")
+        print(f"Order ID    : {order.get('orderId')}")
+        print(f"Price       : {order.get('price')}")
+        print(f"Status      : {order.get('status')}")
 
     except Exception as e:
         print(f"\nError: {str(e)}")

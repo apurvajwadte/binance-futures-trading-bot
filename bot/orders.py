@@ -1,29 +1,43 @@
+from bot.client import get_client
 from bot.logging_config import setup_logger
 
 logger = setup_logger()
 
-def place_order(symbol, side, order_type, quantity, price=None):
+client = get_client()
 
-    logger.info(
-        f"Order Request -> Symbol: {symbol}, "
-        f"Side: {side}, Type: {order_type}, "
-        f"Quantity: {quantity}, Price: {price}"
-    )
+def place_order(symbol, side, order_type, quantity, price=None):
 
     try:
 
-        order_response = {
-            "symbol": symbol,
-            "side": side,
-            "type": order_type,
-            "quantity": quantity,
-            "price": price,
-            "status": "SUCCESS"
-        }
+        logger.info(
+            f"Order Request -> Symbol: {symbol}, "
+            f"Side: {side}, Type: {order_type}, "
+            f"Quantity: {quantity}, Price: {price}"
+        )
 
-        logger.info(f"Order Response -> {order_response}")
+        if order_type == "MARKET":
 
-        return order_response
+            order = client.futures_create_order(
+                symbol=symbol,
+                side=side,
+                type=order_type,
+                quantity=quantity
+            )
+
+        elif order_type == "LIMIT":
+
+            order = client.futures_create_order(
+                symbol=symbol,
+                side=side,
+                type=order_type,
+                quantity=quantity,
+                price=price,
+                timeInForce="GTC"
+            )
+
+        logger.info(f"Order Response -> {order}")
+
+        return order
 
     except Exception as e:
         logger.error(f"Error placing order: {str(e)}")
